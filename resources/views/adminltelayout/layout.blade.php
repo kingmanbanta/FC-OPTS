@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <link href="{{ asset('dist/img/forbeslogo.png') }}" rel="icon">
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -181,126 +181,263 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="#" class="brand-link">
-        <img src="{{ asset('dist/img/forbeslogo.png') }} " alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Forbes</span>
-      </a>
+      @if(Auth::user()->hasRole('Administrator'))
+      <a href="{{ route('admindashboard') }}" class="brand-link">
+        @endif
+        @if(Auth::user()->hasRole('Processor'))
+        <a href="{{ route('processordashboard') }}" class="brand-link">
+          @endif
+          @if(Auth::user()->hasRole('Validator'))
+          <a href="{{ route('validatordashboard') }}" class="brand-link">
+            @endif
+            @if(Auth::user()->hasRole('Approver'))
+            <a href="{{ route('approverdashboard') }}" class="brand-link">
+              @endif
+              @if(Auth::user()->hasRole('Requestor'))
+              <a href="{{ route('requestordashboard') }}" class="brand-link">
+                @endif
+                <img src="{{ asset('dist/img/forbeslogo.png') }} " alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">Forbes</span>
+              </a>
 
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          @if (Auth::user()->hasRole('Administrator'))
-          <div class="image">
-            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 admin-profile_pic" alt="User Image">
-          </div>
-          <div class="info">
-          <a href="{{ route('profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
-            @endif
-            @if (Auth::user()->hasRole('Requestor'))
-            <div class="image">
-            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 requestor-profile_pic" alt="User Image">
-          </div>
-          <div class="info">
-          <a href="{{ route('req_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
-            @endif
-            @if (Auth::user()->hasRole('Processor'))
-            <div class="image">
-            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 processor-profile_pic" alt="User Image">
-          </div>
-          <div class="info">
-          <a href="{{ route('pro_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
-            @endif
-            @if (Auth::user()->hasRole('Validator'))
-            <div class="image">
-            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 validator-profile_pic" alt="User Image">
-          </div>
-          <div class="info">
-          <a href="{{ route('val_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
-            @endif
-            @if (Auth::user()->hasRole('Approver'))
-            <div class="image">
-            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 approver-profile_pic" alt="User Image">
-          </div>
-          <div class="info">
-          <a href="{{ route('app_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
-            @endif
-            
-          </div>
-        </div>
+              <!-- Sidebar -->
+              <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                  @if (Auth::user()->hasRole('Administrator'))
+                  <div class="image">
+                    <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 admin-profile_pic" alt="User Image">
+                  </div>
+                  <div class="info">
+                    <a href="{{ route('profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
+                    @endif
+                    @if (Auth::user()->hasRole('Requestor'))
+                    <div class="image">
+                      <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 requestor-profile_pic" alt="User Image">
+                    </div>
+                    <div class="info">
+                      <a href="{{ route('req_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
+                      @endif
+                      @if (Auth::user()->hasRole('Processor'))
+                      <div class="image">
+                        <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 processor-profile_pic" alt="User Image">
+                      </div>
+                      <div class="info">
+                        <a href="{{ route('pro_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
+                        @endif
+                        @if (Auth::user()->hasRole('Validator'))
+                        <div class="image">
+                          <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 validator-profile_pic" alt="User Image">
+                        </div>
+                        <div class="info">
+                          <a href="{{ route('val_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
+                          @endif
+                          @if (Auth::user()->hasRole('Approver'))
+                          <div class="image">
+                            <img src="{{ Auth::user()->picture }}" class="img-circle elevation-2 approver-profile_pic" alt="User Image">
+                          </div>
+                          <div class="info">
+                            <a href="{{ route('app_profile') }}" class="d-block"> {{ Auth::user()->email }}</a>
+                            @endif
 
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-          <div class="input-group" data-widget="sidebar-search">
-            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-                <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+                          </div>
+                        </div>
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class
+                        <!-- SidebarSearch Form -->
+                        <div class="form-inline">
+                          <div class="input-group" data-widget="sidebar-search">
+                            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                              <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Sidebar Menu -->
+                        <nav class="mt-2">
+                          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-               @if (Auth::user()->hasRole('Administrator'))
-            <li class="nav-header">Manage Accounts</li>
-            <li class="nav-item {{'manageAccount'== request()->path() ?  'active': ''}}">
-              <a href="{{ route('account') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>
-                  Account
-                  <span class="badge badge-info right">2</span>
-                </p>
-              </a>
-            </li>
-            <li class="nav-header">Manage Facilities</li>
-            <li class="nav-item {{'admin/facility'== request()->path() ?  'active': ''}}">
-              <a href="{{ route('facility') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>
-                  Building & Department
-                </p>
-              </a>
-            </li>
-            <li class="nav-header">Manage Supplier & Items</li>
-            <li class="nav-item {{'manageAccount'== request()->path() ?  'active': ''}}">
-              <a href="{{ route('supplier_items') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>
-                  Supplier & Items
-                </p>
-              </a>
-            </li>
-            <li class="nav-header">Requisition</li>
-            <li class="nav-item {{'manageAccount'== request()->path() ?  'active': ''}}">
-              <a href="{{ route('purchase_request') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>
-                 Purchase Request
-                </p>
-              </a>
-            </li>
-            @endif
-            @if(Auth::user()->hasRole('Requestor'))
-            <li class="nav-header">Requisition</li>
-            <li class="nav-item {{'manageAccount'== request()->path() ?  'active': ''}}">
-              <a href="{{ route('req_purchase_request') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>
-                 Purchase Request
-                </p>
-              </a>
-            </li>
-            @endif
-          </ul>
-        </nav>
-        <!-- /.sidebar-menu -->
-      </div>
-      <!-- /.sidebar -->
+                            @if (Auth::user()->hasRole('Administrator'))
+                            <li class="nav-item">
+                              <a href="{{ route('admindashboard') }}" class="nav-link {{ request()->is('admin/dashboard') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                  Home
+                                  <span class="right badge badge-danger">New</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Manage Accounts</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('account') }}" class="nav-link {{ request()->is('admin/manageAccount') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Account
+                                  <span class="badge badge-info right">2</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Manage Facilities</li>
+                            <li class="nav-item">
+                              <a href="{{ route('facility') }}" class="nav-link {{ request()->is('admin/facility') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Building & Department
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Manage Supplier & Items</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('supplier_items') }}" class="nav-link {{ request()->is('admin/supplier_items') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Supplier & Items
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Requisition</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('purchase_request') }}" class="nav-link {{ request()->is('admin/purchase_request') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Purchase Request
+                                </p>
+                              </a>
+                            </li>
+                            @endif
+                            <!-- requestor -->
+                            @if(Auth::user()->hasRole('Requestor'))
+                            <li class="nav-item">
+                              <a href="{{ route('requestordashboard') }}" class="nav-link {{ request()->is('requestor/dashboard') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                  Home
+                                  <span class="right badge badge-danger">New</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Requisition</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('req_purchase_request') }}" class="nav-link {{ request()->is('requestor/req_purchase_request') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Purchase Request
+                                </p>
+                              </a>
+                            </li>
+                            @endif
+                            <!-- processor -->
+                            @if(Auth::user()->hasRole('Processor'))
+                            <li class="nav-item">
+                              <a href="{{ route('processordashboard') }}" class="nav-link {{ request()->is('processor/dashboard') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                  Home
+                                  <span class="right badge badge-danger">New</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Manage Supplier & Items</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('pro_supplier_items') }}" class="nav-link {{ request()->is('processor/supplier_items') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  Supplier & Items
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Requisition</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('pro_purchase_request') }}" class="nav-link {{ request()->is('processor/purchase_request') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  My Purchase Requesition
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-item active">
+                              <a href="{{ route('pr_for_canvass') }}" class="nav-link {{ request()->is('processor/pr_for_canvass') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt "></i>
+                                <p>
+                                  PR for Canvass
+                                </p>
+                              </a>
+                            </li>
+                            @endif
+                            <!-- validator -->
+                            @if(Auth::user()->hasRole('Validator'))
+                            <li class="nav-item">
+                              <a href="{{ route('validatordashboard') }}" class="nav-link {{ request()->is('validator/dashboard') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                  Home
+                                  <span class="right badge badge-danger">New</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Requisition</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('val_purchase_request') }}" class="nav-link {{ request()->is('validator/purchase_request') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  My Purchase Requesition
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-item active">
+                              <a href="{{ route('pr_check_fund') }}" class="nav-link {{ request()->is('validator/pr_check_fund') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt "></i>
+                                <p>
+                                  PR Check for Fund
+                                </p>
+                              </a>
+                            </li>
+                            @endif
+                            <!-- approver -->
+                            @if(Auth::user()->hasRole('Approver'))
+                            <li class="nav-item">
+                              <a href="{{ route('approverdashboard') }}" class="nav-link {{ request()->is('approver/dashboard') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                  Home
+                                  <span class="right badge badge-danger">New</span>
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-header">Requisition</li>
+                            <li class="nav-item ">
+                              <a href="{{ route('app_purchase_request') }}" class="nav-link {{ request()->is('approver/purchase_request') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>
+                                  My Purchase Requesition
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-item active">
+                              <a href="{{ route('new_pr') }}" class="nav-link {{ request()->is('approver/new_pr') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt "></i>
+                                <p>
+                                  New Purchase Request!
+                                </p>
+                              </a>
+                            </li>
+                            <li class="nav-item active">
+                              <a href="{{ route('pr_for_verification') }}" class="nav-link {{ request()->is('approver/pr_for_verification') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-calendar-alt "></i>
+                                <p>
+                                  PR for Verification
+                                </p>
+                              </a>
+                            </li>
+                            @endif
+                          </ul>
+                        </nav>
+                        <!-- /.sidebar-menu -->
+                      </div>
+                      <!-- /.sidebar -->
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
@@ -374,17 +511,17 @@
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-              icon: 'success',
-              title: 'Account have been logout',
-              showConfirmButton: false,
-              timer: 3500
-            });
+          icon: 'success',
+          title: 'Account have been logout',
+          showConfirmButton: false,
+          timer: false
+        });
         $('#logout-form').submit()
       }
     });
     setTimeout(function() {
-              location.reload();
-            }, 3000);
+      location.reload();
+    }, 3000);
   });
 </script>
 

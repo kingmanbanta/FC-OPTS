@@ -24,7 +24,9 @@ class RequestorController extends Controller
         $this->middleware(['role:Requestor']);
     }
     public function index(){
-        return view('requestor.dashboard');
+        $id = Auth::user()->id;
+        $my_pr = PurchaseRequest::where('user_id','=',$id)->count();
+        return view('requestor.dashboard',compact('my_pr'));
     }
     public function profile()
     {

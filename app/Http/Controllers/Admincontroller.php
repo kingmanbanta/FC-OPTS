@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\Staff;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestItem;
+use App\Models\PurchaseRequestHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -141,7 +142,7 @@ class AdminController extends Controller
             $department->id = $request->input('id');
             $department->Dept_name = $request->input('dept_name');
             $department->building_id = $request->input('build_id');
-
+            $department->timestamps = false;
             $department->save();
             return response()->json([
                 'success' => 'department added successfully'
@@ -163,7 +164,7 @@ class AdminController extends Controller
             $building = new Building;
             $building->Building_name = $request->input('build_name');
             $building->Address = $request->input('address');
-
+            $building->timestamps = false;
             $building->save();
             return response()->json([
                 'success' => 'building added successfully',
@@ -592,7 +593,9 @@ class AdminController extends Controller
         $rand = rand(10, 10000);
         $generatePR = 'PR-' . date("Y-md") . '-' . $rand;
 
-        $purchaserequest = PurchaseRequest::where('user_id', '=', $id)->get();
+        $purchaserequest = PurchaseRequest::join('purchase_request_histories', 'purchase_requests.pr_no', '=', 'purchase_request_histories.pr_no')   
+        ->select('*')
+        ->where('user_id', '=', $id)->get();
 
         return view('manage_purchase_request.purchase_request', compact('generatePR', 'user', 'userr','purchaserequest'));
     }
@@ -640,10 +643,14 @@ class AdminController extends Controller
             $requisition->pr_no = $request->input('pr_no');
             $requisition->type = $request->input('type_of_req');
             $requisition->purpose = $request->input('purpose');
-            $requisition->remarks = 'for approval';
+            $requisition->remarks = 'pending';
             $requisition->department_id = $request->input('department');
             $requisition->user_id = Auth::user()->id;
+            $prh = new PurchaseRequestHistory;
+            $prh->pr_no = $request->input('pr_no');
+            $prh->action = 'New Purchase Request';
             $requisition->save();
+            $prh->save();
 
             return response()->json([
                 'success' => 'Requisition added successfully'
@@ -652,12 +659,24 @@ class AdminController extends Controller
     }
     public function view_purchase_request($pr_no)
     {
-        $pr_info = PurchaseRequestItem::where('pr_no', '=', $pr_no)->get()->toArray();
+        $pr_info = PurchaseRequest::join('purchase_request_items','purchase_requests.pr_no','=','purchase_request_items.pr_no')
+        ->join('departments','purchase_requests.department_id', '=','departments.id')
+        ->join('buildings','departments.building_id', '=','buildings.id')
+        ->join('purchase_request_histories','purchase_requests.pr_no', '=','purchase_request_histories.pr_no')
+        ->select('*')
+        ->where('purchase_requests.pr_no', '=', $pr_no)->get()->toArray();
+        $pr_infos = PurchaseRequest::where('purchase_requests.pr_no', '=', $pr_no)->get()->toArray();
         $output = [];
         foreach ($pr_info as $data) {
             $output[] = $data;
         }
-        dd($output);
-        return view('manage_purchase_request.view_purchase_request',compact('output'));
+        $outputs = [];
+        foreach ($pr_infos as $dataa) {
+            $outputs[] = $dataa;
+        }
+        // dd($outputs);
+        // return view('manage_purchase_request.view_purchase_request',['output'=>$output]);
+        return view('manage_purchase_request.view_purchase_requestt',['output'=>$output,'outputs'=>$outputs]);
+
     }
 }

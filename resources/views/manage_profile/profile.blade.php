@@ -48,6 +48,9 @@
                             </div>
                             @endif
                             @if(Auth::user()->hasRole('Validator'))
+							<div class="user-avatar">
+								<img class="validator-profile_pic" src="{{ Auth::user()->picture }} " alt="Maxwell Admin">
+							</div>
                             <div class="mt-2">
                                 <input type="file" name="validator-profile_pic" id="validator-profile_pic" style="opacity: 0;height:1px;display:none">
                                 <a href="#" class="btn btn-primary" id="change_pro_pic">
@@ -57,6 +60,9 @@
                             </div>
                             @endif
                             @if(Auth::user()->hasRole('Approver'))
+							<div class="user-avatar">
+								<img class="approver-profile_pic" src="{{ Auth::user()->picture }} " alt="Maxwell Admin">
+							</div>
                             <div class="mt-2">
                                 <input type="file" name="approver-profile_pic" id="approver-profile_pic" style="opacity: 0;height:1px;display:none">
                                 <a href="#" class="btn btn-primary" id="change_pro_pic">
@@ -66,6 +72,9 @@
                             </div>
                             @endif
                             @if(Auth::user()->hasRole('Processor'))
+							<div class="user-avatar">
+								<img class="processor-profile_pic" src="{{ Auth::user()->picture }} " alt="Maxwell Admin">
+							</div>
                             <div class="mt-2">
                                 <input type="file" name="processor-profile_pic" id="processor-profile_pic" style="opacity: 0;height:1px;display:none">
                                 <a href="#" class="btn btn-primary" id="change_pro_pic">

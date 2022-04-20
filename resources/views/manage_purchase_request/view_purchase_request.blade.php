@@ -30,12 +30,15 @@
                             </div>
                         </div>
                     </section>
-                    <form id="">
+                    <form id="viewPR">
+                        {{csrf_field()}}
                         <section class="p-2">
                             <span class="badge badge-success" style="font-size: 20px;">Purchase Requisiton Form</span>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="building" name="building" value="{{$user->id}}" checked>
-                                <label class="custom-control-label" for="building">{{$user->Building_name}}</label>
+                                @if(!empty($user))
+                                <input type="checkbox" class="custom-control-input" id="building" name="building" value="" checked>
+                                <label class="custom-control-label" for="building">{{ $user->Building_name }}
+                                    @endif
                             </div>
                             <table class="table table-bordered table-sm">
                                 <tbody>
@@ -44,8 +47,11 @@
                                             Type of Requisition:
                                             <!-- Default inline 1-->
                                             <div class="custom-control custom-radio custom-control-inline">
-                                                <input type="radio" class="custom-control-input" id="type_of_req1" value="" name="type_of_req">
-                                                <label class="custom-control-label" for="type_of_req1"></label>
+                                                @if(!empty($output[0]['type']))
+                                                <input type="radio" class="custom-control-input" id="type_of_req1" value="" name="type_of_req" checked>
+                                                <label class="custom-control-label" for="type_of_req1">{{$output[0]['type']}}</label>
+                                                @endif
+
                                             </div>
                                             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                                             <span class="text-danger">
@@ -54,30 +60,34 @@
                                         </td>
                                         <td>
                                             PR number:
-                                            <input type="hidden" class="form-group" id="pr_no" name="pr_no" value="">
-                                            
+                                            @if(!empty($output[0]['pr_no']))
+                                            <input type="hidden" class="form-group" id="pr_noo" name="pr_noo" value="{{ $output[0]['pr_no'] }}">
+                                            <label class="custom-control-label pr_no" for="">{{ $output[0]['pr_no'] }}</label>
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <th colspan="2">
                                             Requesting Department:
-                                            <input type="hidden" class="form-group" id="department" name="department" value="{{$userr->id}}">
-                                            <span style="font-size: 18px;"></span>
+                                            @if(!empty($user))
+                                            <input type="hidden" class="form-group" id="department" name="department" value="">
+                                            <span style="font-size: 18px;">{{$user->Dept_name}}</span>
+                                            @endif
                                         </th>
                                         <td>
-                                            <small>Date:</small><br>
-                                            <span></span>
+                                            Date:
+                                            @if(!empty($output[0]['created_at']))
+                                            <span>{{$output[0]['created_at']}}</span>
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <th colspan="4">
                                             <div class="form-group">
                                                 <label for="exampleFormControlTextarea2">Purpose of Requisition</label>
-                                                <textarea class="form-control rounded-0" id="purpose" name="purpose" rows="3"></textarea>
-                                                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                                                <span class="text-danger">
-                                                    <strong id="purpose-error"></strong>
-                                                </span>
+                                                @if(!empty($output[0]['purpose']))
+                                                <textarea class="form-control rounded-0" id="purpose" name="purpose" rows="3">{{$output[0]['purpose']}}</textarea>
+                                                @endif
                                             </div>
                                         </th>
                                     </tr>
@@ -128,7 +138,16 @@
                                 </tr>
                                 <tbody>
                                     <tr>
-
+                                        @if(!empty($output))
+                                        @foreach($output as $outputs)
+                                        <td class="pr_beggining">{{$outputs['beggining']}}</td>
+                                        <td class="pr_type">{{$outputs['ending']}}</td>
+                                        <td class="pr_purpose">{{$outputs['unit']}}</td>
+                                        <td class="pr_remark">{{$outputs['quantity']}}</td>
+                                        <td class="pr_remark">{{$outputs['item_desc']}}."\n"</td>
+                                        
+                                        @endforeach
+                                        @endif
                                     </tr>
                                 </tbody>
                                 <tfoot>
@@ -147,11 +166,7 @@
                             </table>
 
                         </section>
-                        <div class="modal-footer">
-                            <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit Request</button>
-                        </div>
-
+                        <div class="modal-footer"></div>
                 </div>
                 </form>
             </div>
@@ -159,7 +174,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     $().ready(function() {
         $('.view_btn').on('click', function() {
             $('#viewPurchaseRequest').appendTo("body").modal('show');
@@ -167,12 +182,14 @@
             let row = $(this).closest("tr");
             let pr_no = row.find(".pr_pr_no").text();
             console.log(pr_no);
+            
 
             $.ajax({
                 type: "GET",
                 url: "purchase_request/view/" + pr_no,
+                data: $('#viewPR').serialize(),
             })
 
         });
     });
-</script>
+</script> -->

@@ -36,6 +36,7 @@
                                 <th>Type</th>
                                 <th>Purpose</th>
                                 <th>Remarks</th>
+                                <!-- <th>Actions</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -46,9 +47,21 @@
                                 <td class="pr_pr_no">{{$purchase_requests->pr_no}}</td>
                                 <td class="pr_type">{{$purchase_requests->type}}</td>
                                 <td class="pr_purpose">{{$purchase_requests->purpose}}</td>
-                                <td class="pr_remark">{{$purchase_requests->remarks}}</td>
+                                <td class="pr_purpose">{{$purchase_requests->remarks}}</td>
+                                <!-- <td class="pr_remark">{{$purchase_requests->action}}</td> -->
                                 <td>
-                                    <a href="#" class="btn btn-danger btn-block btn-sm view_btn"><i class="fa fa-eye"></i>View</a>
+                                    @if(Auth::user()->hasRole('Administrator'))
+                                    <a href="{{route('vpr',$pr_no = $purchase_requests->pr_no )}}" class="btn btn-danger btn-block btn-sm view_btn"><i class="fa fa-eye"></i>View</a>
+                                    @endif
+                                    @if(Auth::user()->hasRole('Approver'))
+                                    <a href="{{route('app_vpr',$pr_no = $purchase_requests->pr_no )}}" class="btn btn-danger btn-block btn-sm view_btn"><i class="fa fa-eye"></i>View</a>
+                                    @endif
+                                    @if(Auth::user()->hasRole('Processor'))
+                                    <a href="{{route('pro_vpr',$pr_no = $purchase_requests->pr_no )}}" class="btn btn-danger btn-block btn-sm view_btn"><i class="fa fa-eye"></i>View</a>
+                                    @endif
+                                    @if(Auth::user()->hasRole('Validator'))
+                                    <a href="{{route('val_vpr',$pr_no = $purchase_requests->pr_no )}}" class="btn btn-danger btn-block btn-sm view_btn"><i class="fa fa-eye"></i>View</a>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -61,7 +74,7 @@
 </div>
 
 @include('manage_purchase_request.add_purchase_request')
-@include('manage_purchase_request.view_purchase_request')
+<!-- @include('manage_purchase_request.view_purchase_request') -->
 
 
 <script>

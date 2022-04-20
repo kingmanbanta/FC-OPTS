@@ -35,10 +35,14 @@
                         <section class="p-2">
                             <span class="badge badge-success" style="font-size: 20px;">Purchase Requisiton Form</span>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="building" name="building" value="Auth::$user()->id" checked>
-                                
+                                @if(empty($user->Building_name))
+                                <div class="alert alert-danger">
+                                    <span>Error!! Update Profile First!</span>
+                                </div>
+                                @else
+                                <input type="checkbox" class="custom-control-input" id="building" name="building" value="{{$user->id}}" checked>
                                 <label class="custom-control-label" for="building">{{$user->Building_name}}</label>
-                                
+                                @endif
                             </div>
                             <table class="table table-bordered table-sm">
                                 <tbody>
@@ -75,12 +79,18 @@
                                     <tr>
                                         <th colspan="2">
                                             <p>Requesting Department:</p>
+                                            @if(empty($userr->id))
+                                            <input type="hidden" class="form-group" id="department" name="department">
+                                            <span style="font-size: 18px;"></span>
+                                            @else
                                             <input type="hidden" class="form-group" id="department" name="department" value="{{$userr->id}}">
                                             <span style="font-size: 18px;">{{$userr->Dept_name}}</span>
+                                            @endif
+
                                         </th>
                                         <td>
                                             <small>Date:</small><br>
-                                            <span>{{ date('Y-m-d H:i:s') }}</span>
+                                            <span>{{ now(); }}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -146,6 +156,12 @@
                                     </th>
                                 </tr>
                                 <tbody>
+                                    <div style="display:none">
+                                        @foreach($get_item as $items)
+                                        <option class="items" name="items[]" id="items[]" value="{{$items->id}}">{{$items->item_desc}}</td>
+                                        <option class="item_desc" name="items[]" id="items[]" value="{{$items->item_desc}}">{{$items->item_desc}}</td>
+                                            @endforeach
+                                    </div>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -174,9 +190,24 @@
         </div>
     </div>
     <script type="text/javascript">
+        // alert(addoption);  
+
+
         const x = () => {
             var table = document.getElementById("myTable").getElementsByTagName('tbody')[0];
             var row = table.insertRow();
+            // var taskArray = new Array();
+            // $('.items').each(function() {
+            //     taskArray.push($(this).val());
+            // });
+            // var taskArrayy = new Array();
+            // $('.item_desc').each(function() {
+            //     taskArrayy.push($(this).val());
+            // });
+            //  alert(taskArrayy);  
+            function addoption() {
+                $('#addoption').append('<option value="${taskArray}">${taskArrayy}</option>');
+            }
 
             let cell1 = row.insertCell(0);
             let cell2 = row.insertCell(1);
@@ -187,9 +218,10 @@
 
             cell1.innerHTML = "<p><input class='form-control request_table' type='text'  name='beggining[]' required></p>";
             cell2.innerHTML = "<p><input class='form-control request_table' type='text'  name='ending[]' required></p>";
-            cell3.innerHTML = "<p><input class='form-control request_table' type='text'  name='quantity[]'required></p>";
+            cell3.innerHTML = "<p><input class='form-control request_table' type='number' min='1' name='quantity[]'required></p>";
             cell4.innerHTML = "<p><input class='form-control request_table' type='text'  name='unit[]' required></p>";
             cell5.innerHTML = "<p><input class='form-control request_table' type='text'  name='item_desc[]' required></p>";
+            // cell5.innerHTML = '<p><select id="addoption" name="item_unit[]" class="form-control"><option value="taskArrayy">taskArrayy</option></select></p>';
             cell6.innerHTML = "<button type='button' class='btn btn-danger btn-block btn-sm' onclick='y()'><i class='fa fa-trash'></i>Remove</button>";
         }
 
@@ -203,52 +235,64 @@
         $().ready(function() {
             $('#addRequisitionForm').on('submit', function(e) {
                 e.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: "requisitionsave/",
-                    data: $('#addRequisitionForm').serialize(),
-                    success: function(response) {
-                        console.log(response);
-                        if (response.errors) {
-                            if (response.errors.type_of_req) {
-                                $('#type_of_req-error').html(response.errors.type_of_req[0]);
-                            }
-                            if (response.errors.purpose) {
-                                $('#purpose-error').html(response.errors.purpose[0]);
-                            }
-                            if (response.errors.beggining) {
-                                $('#beggining-error').html(response.errors.beggining[0]);
-                            }
-                            if (response.errors.ending) {
-                                $('#ending-error').html(response.errors.ending[0]);
-                            }
-                            if (response.errors.quantity) {
-                                $('#quantity-error').html(response.errors.quantity[0]);
-                            }
-                            if (response.errors.unit) {
-                                $('#unit-error').html(response.errors.unit[0]);
-                            }
-                            if (response.errors.item_desc) {
-                                $('#item_desc-error').html(response.errors.item_desc[0]);
-                            }
-                        }
-                        if (response.success) {
-                            $('#addRequisitionForm').modal('hide');
-                            //alert("data updated");
-                            Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Your work has been saved',
-                                showConfirmButton: false,
-                                timer: 3500
-                            });
-                            setTimeout(function() {
-                                location.reload();
-                            }, 3000);
-                        }
-                    },
-
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, send it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "requisitionsave/",
+                            data: $('#addRequisitionForm').serialize(),
+                            success: function(response) {
+                                console.log(response);
+                                if (response.errors) {
+                                    if (response.errors.type_of_req) {
+                                        $('#type_of_req-error').html(response.errors.type_of_req[0]);
+                                    }
+                                    if (response.errors.purpose) {
+                                        $('#purpose-error').html(response.errors.purpose[0]);
+                                    }
+                                    if (response.errors.beggining) {
+                                        $('#beggining-error').html(response.errors.beggining[0]);
+                                    }
+                                    if (response.errors.ending) {
+                                        $('#ending-error').html(response.errors.ending[0]);
+                                    }
+                                    if (response.errors.quantity) {
+                                        $('#quantity-error').html(response.errors.quantity[0]);
+                                    }
+                                    if (response.errors.unit) {
+                                        $('#unit-error').html(response.errors.unit[0]);
+                                    }
+                                    if (response.errors.item_desc) {
+                                        $('#item_desc-error').html(response.errors.item_desc[0]);
+                                    }
+                                }
+                                if (response.success) {
+                                    $('#addRequisitionForm').modal('hide');
+                                    //alert("data updated");
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Your work has been saved',
+                                        showConfirmButton: false,
+                                        timer: 3500
+                                    });
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 3000);
+                                }
+                            },
+                        });
+                    }
                 });
             });
+
         });
     </script>

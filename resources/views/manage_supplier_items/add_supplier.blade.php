@@ -4,7 +4,7 @@
   <div role="document" class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">Add Building</h5>
+        <h5 id="exampleModalLabel" class="modal-title">Add Supplier</h5>
         <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
       </div>
       <form id="addSupplierForm">
